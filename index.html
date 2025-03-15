@@ -1,11 +1,11 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FACEMASH</title>
-  <link rel="icon" href="images/icon.png" />
+  <title>Mess Mash</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
@@ -16,45 +16,41 @@
   <div>
     <div class="wrapper">
       <div class="title">
-        <h1>FACEMASH</h1>
+        <h1>Mess Mash</h1>
       </div>
       <div class="container">
         <h3>
-          Were we let in for our looks? No. Will we be judged on them? Yes.
+          Roz rajma chawal? Ya thoda bohot keema pav, tangdi kabab, hakka noodle bhi hona chahiye?
         </h3>
-        <h2>Who's Hotter? Click to Choose.</h2>
-        
+        <h2>Pick the better Mess dish</h2>
+
+        <!-- Category Selection Buttons -->
+        <div class="category-buttons">
+          <button id="breakfast" class="category-button" onclick="selectCategory('breakfast')">Breakfast</button>
+          <button id="lunch" class="category-button" onclick="selectCategory('lunch')">Lunch</button>
+          <button id="snacks" class="category-button" onclick="selectCategory('snacks')">Snacks</button>
+          <button id="dinner" class="category-button" onclick="selectCategory('dinner')">Dinner</button>
+        </div>
+
+        <!-- Category Subheading -->
+        <h2 id="category-subheading">Category: None</h2>
+
+        <!-- Image Comparison Section -->
         <div class="img-wrapper">
           <img src="" alt="Left Image" id="leftImg" onclick="clickLeft()" />
           <h3 class="or-char">OR</h3>
           <img src="" alt="Right Image" id="rightImg" onclick="clickRight()" />
         </div>
-        
-        <ul class="house-list">
-          <li><a href="#">ADAMS</a></li>
-          <li><a href="#">CABOT</a></li>
-          <li><a href="#">DUNSTER</a></li>
-          <li><a href="#">ELIOT</a></li>
-          <li><a href="#">KIRKLAND</a></li>
-          <li><a href="#">LEVERETT</a></li>
-          <li><a href="#">LOWELL</a></li>
-          <li><a href="#">MATHER</a></li>
-          <li><a href="#">PFOHO</a></li>
-          <li><a href="#">RANDOM</a></li>
-        </ul>
-        
+
+        <!-- Footer Links -->
         <ul class="footer-list">
-          <li><a href="about.html">About</a></li>
-          <li><a href="#">Submit</a></li>
-          <li><a href="ranking.html">Rankings</a></li>
-          <li><a href="#">Previous</a></li>
+          <li><a href="ranking.html">Current Rankings</a></li>
         </ul>
       </div>
     </div>
   </div>
-  
+
   <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-  <script type="text/javascript"></script>
   <script src="main.js"></script>
 </body>
 

@@ -1,20 +1,35 @@
-const imgDir = "images/farm%20animals/";
+const imgDir = "images/farm_animals/";
 
-document.addEventListener('DOMContentLoaded', function () {
+// Function to load rankings for a specific category
+function loadRankings(category) {
+  // Update the subheading
+  document.getElementById("category-subheading").textContent = `Category: ${category.charAt(0).toUpperCase() + category.slice(1)}`;
+
+  // Highlight the selected button
+  document.querySelectorAll(".category-button").forEach(button => {
+    button.classList.remove("active");
+  });
+  document.getElementById(category).classList.add("active");
+
+  // Filter sessionStorage items for the selected category
   const sessionStorageArray = [];
   for (let i = 0; i < sessionStorage.length; i++) {
     const key = sessionStorage.key(i);
-    const value = sessionStorage.getItem(key);
-    const floatValue = parseFloat(value);
+    if (key.startsWith(`${category}/`)) { // Check if the key belongs to the selected category
+      const value = sessionStorage.getItem(key);
+      const floatValue = parseFloat(value);
 
-    if (!isNaN(floatValue)) {
-      const roundedValue = floatValue.toFixed(3);
-      sessionStorageArray.push({ key, value: roundedValue });
+      if (!isNaN(floatValue)) {
+        const roundedValue = floatValue.toFixed(3);
+        sessionStorageArray.push({ key, value: roundedValue });
+      }
     }
   }
 
+  // Sort by Elo rating
   sessionStorageArray.sort((a, b) => parseFloat(b.value) - parseFloat(a.value));
 
+  // Populate the table
   const tableBody = document.getElementById('eloTableBody');
   tableBody.innerHTML = '';
 
@@ -34,4 +49,9 @@ document.addEventListener('DOMContentLoaded', function () {
     cell2.appendChild(imgElement);
     cell3.textContent = item.value;
   });
+}
+
+// Load default category rankings on page load
+document.addEventListener('DOMContentLoaded', function () {
+  loadRankings("breakfast"); // Default to breakfast category
 });
