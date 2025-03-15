@@ -35,7 +35,7 @@ async function submitVote(category, winner, loser, voter_name) {
   if (!voter_name) voter_name = ' ';
 
   try {
-    const response = await fetch('http://localhost:3000/vote', {
+    const response = await fetch('https://messmash.onrender.com/vote', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ category, winner, loser, voter_name }),

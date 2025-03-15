@@ -2,7 +2,7 @@ const imgDir = "images/farm_animals/";
 
 async function loadRankings(category) {
   try {
-    const response = await fetch(`http://localhost:3000/rankings/${category}`);
+    const response = await fetch(`https://messmash.onrender.com/rankings/${category}`);
     if (!response.ok) {
       throw new Error('Failed to fetch rankings');
     }
