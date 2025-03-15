@@ -1,51 +1,55 @@
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mess Mash</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
+<body class="d-flex flex-column min-vh-100">
+  <header class="bg-maroon text-white py-3">
+    <div class="container">
+      <h1 class="mb-0">Mess Mash</h1>
+      <p class="mb-0">Farm Animals Elo Rating</p>
+    </div>
+  </header>
 
-<body>
-  <h3 class="sub-page-title">Farm Animals Elo Rating</h3>
+  <nav class="navbar navbar-expand-lg bg-grey py-2">
+    <div class="container d-flex align-items-center">
+      <div class="category-buttons d-flex gap-2">
+        <button class="btn btn-outline-maroon" onclick="loadRankings('breakfast')">Breakfast</button>
+        <button class="btn btn-outline-maroon" onclick="loadRankings('lunch')">Lunch</button>
+        <button class="btn btn-outline-maroon" onclick="loadRankings('snacks')">Snacks</button>
+        <button class="btn btn-outline-maroon" onclick="loadRankings('dinner')">Dinner</button>
+      </div>
+    </div>
+  </nav>
 
-  <!-- Category Selection Buttons -->
-  <div class="category-buttons">
-    <button id="breakfast" class="category-button" onclick="loadRankings('breakfast')">Breakfast</button>
-    <button id="lunch" class="category-button" onclick="loadRankings('lunch')">Lunch</button>
-    <button id="snacks" class="category-button" onclick="loadRankings('snacks')">Snacks</button>
-    <button id="dinner" class="category-button" onclick="loadRankings('dinner')">Dinner</button>
-  </div>
+  <main class="container my-4">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Image</th>
+          <th>Elo</th>
+          <th>Biggest Fan</th>
+          <th>Biggest Hater</th>
+        </tr>
+      </thead>
+      <tbody id="eloTableBody">
+      </tbody>
+    </table>
+  </main>
 
-  <!-- Category Subheading -->
-  <h2 id="category-subheading">Category: None</h2>
-
-  <!-- Rankings Table -->
-  <table>
-    <thead>
-      <tr>
-        <th>Rank</th>
-        <th>Image</th>
-        <th>Elo Rating</th>
-      </tr>
-    </thead>
-    <tbody id="eloTableBody">
-      <!-- Elo rating rows will be added dynamically here -->
-    </tbody>
-  </table>
-
-  <!-- Back Button -->
-  <div class="back-footer">
-    <button><a href="index.html">Back</a></button>
-  </div>
+  <footer class="bg-grey text-center py-3">
+    <a href="index.html" class="btn btn-outline-maroon" style="text-align: center;">Back</a>
+    <span class="mb-0" style="font-size: 10px; margin-left: 50%;">Made with < 3 by @kkkarnav</span>
+  </footer>
 
   <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
   <script src="ranking.js"></script>
 </body>
-
 </html>

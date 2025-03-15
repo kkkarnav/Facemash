@@ -1,21 +1,28 @@
 const imgDir = "images/farm_animals/";
 const imgNaming = "animal";
 const arrayLength = 6;
-const imageArray = [], sessionStorageArray = [];
+const imageArray = [];
 
-let baseRating = 1000;
-const k = 32; // K-factor for Elo rating system
-
-// Track the selected category
 let selectedCategory = null;
+let lastRandomItem = null;
 
-// Get a random item from the array
-function getRandomItem(array) {
-  const randomIndex = Math.floor(Math.random() * array.length);
-  return array[randomIndex];
+function getRandomItem(array, excludeItems) {
+  let availableItems = array.filter(item => !excludeItems.has(item));
+  availableItems = availableItems.filter(item => item !== lastRandomItem);
+
+  if (availableItems.length === 0) {
+    excludeItems.clear();
+    availableItems = array.filter(item => !excludeItems.has(item));
+    availableItems = availableItems.filter(item => item !== lastRandomItem);
+  }
+
+  const randomIndex = Math.floor(Math.random() * availableItems.length);
+  const randomItem = availableItems[randomIndex];
+
+  lastRandomItem = randomItem;
+  return randomItem;
 }
 
-// Get img name without extension from element src
 function getImgName(url) {
   const lastIndex = url.lastIndexOf('/');
   if (lastIndex !== -1) {
@@ -24,132 +31,95 @@ function getImgName(url) {
   return url;
 }
 
-// Elo rating formula in chess
-function probability(leftRating, rightRating) {
-  return 1.0 * 1.0 / (1 + 1.0 * Math.pow(10, 1.0 * (leftRating - rightRating) / 400));
+async function submitVote(category, winner, loser, voter_name) {
+  if (!voter_name) voter_name = ' ';
+
+  try {
+    const response = await fetch('http://localhost:3000/vote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ category, winner, loser, voter_name }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to submit vote');
+    }
+  } catch (error) {
+    console.error('Error submitting vote:', error);
+  }
 }
 
-function eloRating(leftRating, rightRating, k, win) {
-  let leftProb = probability(rightRating, leftRating); // left win probability
-  let rightProb = probability(leftRating, rightRating); // right win probability
-  if (win) { // left wins, right chosen
-    leftRating = leftRating + k * (1 - leftProb); // add left rating
-    rightRating = rightRating + k * (0 - rightProb); // minus right rating
-  } else { // right wins. left chosen
-    leftRating = leftRating + k * (0 - leftProb); // minus left rating
-    rightRating = rightRating + k * (1 - rightProb); // add right rating
-  }
-  return { leftRating, rightRating };
-}
+async function updateEloAndDisplay(leftWin) {
+  const leftImage = document.getElementById("leftImg");
+  const leftImgName = getImgName(leftImage.src);
 
-// Update session value and get new image
-function updateEloAndDisplay(leftWin) {
-  var leftImage = document.getElementById("leftImg");
-  var leftImgName = getImgName(leftImage.src);
+  const rightImage = document.getElementById("rightImg");
+  const rightImgName = getImgName(rightImage.src);
 
-  var rightImage = document.getElementById("rightImg");
-  var rightImgName = getImgName(rightImage.src);
+  const voterName = document.getElementById('voterName').value || ' ';
 
-  const storedLeft = sessionStorage.getItem(leftImgName);
-  const storedRight = sessionStorage.getItem(rightImgName);
+  await submitVote(selectedCategory, leftWin ? leftImgName : rightImgName, leftWin ? rightImgName : leftImgName, voterName);
 
-  if (storedLeft == null) {
-    sessionStorage.setItem(leftImgName, baseRating);
-  }
-
-  if (storedRight == null) {
-    sessionStorage.setItem(rightImgName, baseRating);
-  }
-
-  const leftRating = parseFloat(sessionStorage.getItem(leftImgName));
-  const rightRating = parseFloat(sessionStorage.getItem(rightImgName));
-
-  const result = eloRating(leftRating, rightRating, k, leftWin);
-
-  // Update the Elo ratings for the next round
-  sessionStorage.setItem(leftImgName, result.leftRating);
-  sessionStorage.setItem(rightImgName, result.rightRating);
-
-  // Change image for unclicked side
   if (leftWin) {
-    // Swap right image
-    do {
-      rightImageSource = imgDir + selectedCategory + "/" + getRandomItem(imageArray);
-    } while (rightImageSource === leftImage.src);
-    rightImage.src = rightImageSource;
+    const newRightImg = getRandomItem(imageArray, new Set([leftImgName.replace(/%20/g, ' '), rightImgName.replace(/%20/g, ' ')]));
+    rightImage.src = imgDir + selectedCategory + "/" + newRightImg;
+    document.getElementById("rightImgLabel").textContent = newRightImg.replace(/\.[^/.]+$/, "");
   } else {
-    // Swap left image
-    do {
-      leftImageSource = imgDir + selectedCategory + "/" + getRandomItem(imageArray);
-    } while (leftImageSource === rightImage.src);
-    leftImage.src = leftImageSource;
+    const newLeftImg = getRandomItem(imageArray, new Set([leftImgName.replace(/%20/g, ' '), rightImgName.replace(/%20/g, ' ')]));
+    leftImage.src = imgDir + selectedCategory + "/" + newLeftImg;
+    document.getElementById("leftImgLabel").textContent = newLeftImg.replace(/\.[^/.]+$/, "");
   }
 }
 
-// Function to select a category
 function selectCategory(category) {
-  // Update the selected category
   selectedCategory = category;
 
-  // Update the subheading
-  document.getElementById("category-subheading").textContent = `Category: ${category.charAt(0).toUpperCase() + category.slice(1)}`;
-
-  // Highlight the selected button
-  document.querySelectorAll(".category-button").forEach(button => {
+  document.querySelectorAll(".btn-outline-maroon").forEach(button => {
     button.classList.remove("active");
   });
-  document.getElementById(category).classList.add("active");
+  document.querySelector(`button[onclick="selectCategory('${category}')"]`).classList.add("active");
 
-  // Load two random images from the selected category
   loadRandomImages();
 }
 
-// Function to load two random images from the selected category
 function loadRandomImages() {
   if (!selectedCategory) return;
 
-  // Fetch the list of images in the selected category
   const imageList = getImageListForCategory(selectedCategory);
-
-  // Randomly select two images
   const randomIndex1 = Math.floor(Math.random() * imageList.length);
   let randomIndex2 = Math.floor(Math.random() * imageList.length);
   while (randomIndex2 === randomIndex1) {
     randomIndex2 = Math.floor(Math.random() * imageList.length);
   }
 
-  // Update the image sources
   document.getElementById("leftImg").src = imageList[randomIndex1];
   document.getElementById("rightImg").src = imageList[randomIndex2];
+
+  document.getElementById("leftImgLabel").textContent = imageList[randomIndex1].split('/').pop().replace(/\.[^/.]+$/, "");
+  document.getElementById("rightImgLabel").textContent = imageList[randomIndex2].split('/').pop().replace(/\.[^/.]+$/, "");
 }
 
-// Placeholder function to get the list of images for a category
 function getImageListForCategory(category) {
   const imageList = [];
-  for (let i = 1; i <= 6; i++) { // Assuming 6 images per category
+  for (let i = 1; i <= arrayLength; i++) {
     imageList.push(`${imgDir}${category}/${imgNaming} (${i}).jpg`);
   }
   return imageList;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Populate the array with filenames
   for (let i = 1; i <= arrayLength; i++) {
-    var img = imgNaming + ` (${i}).jpg`;
+    const img = imgNaming + ` (${i}).jpg`;
     imageArray.push(img);
-    sessionStorage.setItem(img, baseRating);
   }
 
-  // Set default category to breakfast
   selectCategory("breakfast");
 });
 
-// Left wins, right loses
-function clickLeft() {
-  updateEloAndDisplay(true);
+async function clickLeft() {
+  await updateEloAndDisplay(true);
 }
 
-// Right wins, left loses
-function clickRight() {
-  updateEloAndDisplay(false);
+async function clickRight() {
+  await updateEloAndDisplay(false);
 }

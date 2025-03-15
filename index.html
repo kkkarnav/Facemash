@@ -1,57 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mess Mash</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
+<body class="d-flex flex-column min-vh-100">
+  <header class="bg-maroon text-white py-3">
+    <div class="container">
+      <h1 class="mb-0">Mess Mash</h1>
+      <p class="mb-0">Roz rajma chawal? Ya thoda bohot keema pav, tangdi kabab, hakka noodle bhi hona chahiye?</p>
+    </div>
+  </header>
 
-<body>
-  <div>
-    <div class="wrapper">
-      <div class="title">
-        <h1>Mess Mash</h1>
+  <nav class="navbar navbar-expand-lg bg-grey py-2">
+    <div class="container d-flex align-items-center">
+      <input type="text" id="voterName" class="form-control me-2" placeholder="Enter your name" style="max-width: 200px;">
+      <div class="category-buttons d-flex gap-2">
+        <button class="btn btn-outline-maroon" onclick="selectCategory('breakfast')">Breakfast</button>
+        <button class="btn btn-outline-maroon" onclick="selectCategory('lunch')">Lunch</button>
+        <button class="btn btn-outline-maroon" onclick="selectCategory('snacks')">Snacks</button>
+        <button class="btn btn-outline-maroon" onclick="selectCategory('dinner')">Dinner</button>
       </div>
-      <div class="container">
-        <h3>
-          Roz rajma chawal? Ya thoda bohot keema pav, tangdi kabab, hakka noodle bhi hona chahiye?
-        </h3>
-        <h2>Pick the better Mess dish</h2>
+      <a href="ranking.html" class="btn btn-outline-maroon me-3">View Rankings</a>
+    </div>
+  </nav>
 
-        <!-- Category Selection Buttons -->
-        <div class="category-buttons">
-          <button id="breakfast" class="category-button" onclick="selectCategory('breakfast')">Breakfast</button>
-          <button id="lunch" class="category-button" onclick="selectCategory('lunch')">Lunch</button>
-          <button id="snacks" class="category-button" onclick="selectCategory('snacks')">Snacks</button>
-          <button id="dinner" class="category-button" onclick="selectCategory('dinner')">Dinner</button>
-        </div>
-
-        <!-- Category Subheading -->
-        <h2 id="category-subheading">Category: None</h2>
-
-        <!-- Image Comparison Section -->
-        <div class="img-wrapper">
-          <img src="" alt="Left Image" id="leftImg" onclick="clickLeft()" />
-          <h3 class="or-char">OR</h3>
-          <img src="" alt="Right Image" id="rightImg" onclick="clickRight()" />
-        </div>
-
-        <!-- Footer Links -->
-        <ul class="footer-list">
-          <li><a href="ranking.html">Current Rankings</a></li>
-        </ul>
+    <div class="row flex-grow-1 m-0">
+      <div class="col-md-6 p-0 d-flex flex-column justify-content-center">
+        <h4 id="leftImgLabel" class="mb-2" style="text-align: right; padding-right: 5%;"></h4>
+        <img src="" alt="Left Image" id="leftImg" class="img-fluid w-100 h-100" onclick="clickLeft()" style="object-fit: cover;" />
+      </div>
+      <div class="col-md-6 p-0 d-flex flex-column justify-content-center">
+        <h4 id="rightImgLabel" class="mb-2" style="text-align: left !important; padding-left: 5%;" ></h4>
+        <img src="" alt="Right Image" id="rightImg" class="img-fluid w-100 h-100"onclick="clickRight()" style="object-fit: cover;" />
       </div>
     </div>
-  </div>
+  </main>
+
+  <footer class="bg-grey text-center py-2">
+    <p class="mb-0" style="font-size: 10px; text-align: right; margin-right: 10%;">Made with < 3 by @kkkarnav</p>
+  </footer>
 
   <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
   <script src="main.js"></script>
 </body>
-
 </html>
